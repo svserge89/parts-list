@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Parts List</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-block">
+                <div th:if="${error}=='save_fail'"
+                     class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Failed to save the information to the database!
+                    </strong>
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='save_part_exists'"
+                     class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Failed to save the information to the database!
+                    </strong>
+                    <br />
+                    The part name is already exists in the database.
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='delete_fail'"
+                     class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Failed delete information from the database!
+                    </strong>
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='delete_part_not_exists'"
+                     class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Failed delete information from the database!
+                    </strong>
+                    <br />
+                    The removed part is missing in the database.
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='save_incorrect'"
+                     class="alert alert-danger alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Failed to save the information to the database!
+                    </strong>
+                    <br />
+                    Invalid values in the stored data.
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='save_completed'"
+                     class="alert alert-success alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        The information was successfully saved to the database.
+                    </strong>
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div th:if="${error}=='delete_completed'"
+                     class="alert alert-success alert-dismissible fade show"
+                     role="alert">
+                    <strong>
+                        Information was successfully deleted from the database.
+                    </strong>
+                    <button type="button" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <h4 class="text-center">Parts list</h4>
+
+                <form method="get" action="/" id="search_form">
+                    <div class="input-group mb-3">
+                        <input type="hidden" th:value="${current_filter}"
+                               name="filter" />
+                        <input th:if="${current_search.isEmpty()}" type="text"
+                               class="form-control search-field"
+                               placeholder="Search..." name="search" />
+                        <input th:if="${!current_search.isEmpty()}" type="text"
+                               class="form-control search-field"
+                               placeholder="Search..." name="search"
+                               th:value="${current_search}" />
+                        <div class="input-group-append">
+                            <button type="submit"
+                                    class="btn btn-outline-secondary"
+                                    th:classappend="${!current_search.isEmpty()}?'active':''">
+                                Search
+                            </button>
+                            <a class="btn btn-outline-secondary" href="/"
+                               th:classappend="${current_search.isEmpty()}?'active':''">
+                                Clean
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <div class="btn-toolbar mb-3 justify-content-center"
+                     role="toolbar">
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/(search=${current_search})}"
+                           th:classappend="${current_filter}=='all'?'active':''">
+                            All parts
+                        </a>
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/(filter='required',search=${current_search})}"
+                           th:classappend="${current_filter}=='required'?'active':''">
+                            Required only
+                        </a>
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/(filter='optional',search=${current_search})}"
+                           th:classappend="${current_filter}=='optional'?'active':''">
+                            Optional only
+                        </a>
+                    </div>
+                </div>
+                <table class="table table-hover" id="main-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-right">Required</th>
+                        <th class="text-right">Count</th>
+                        <th><a class="btn btn-success float-right"
+                               th:href="@{/add(page=${current_page},filter=${current_filter})}">
+                            Add
+                        </a></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="part : ${parts.content}">
+                        <td th:text="${part.name}"></td>
+                        <td class="text-right">
+                            <input class="checkbox" type="checkbox"
+                                   th:checked="${part.need}" disabled />
+                        </td>
+                        <td class="text-right" th:text="${part.count}"></td>
+                        <td><a class="btn btn-primary float-right"
+                               th:href="@{/edit(id=${part.id},page=${current_page},filter=${current_filter})}">
+                            Edit
+                        </a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-hover">
+                    <tbody>
+                    <tr>
+                        <td>Can make</td>
+                        <td class="text-right" th:text="${computers}"></td>
+                        <td class="text-right">computers</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <ul th:if="${parts.totalPages>1}"
+                    class="nav nav-pills mb-3 justify-content-center">
+                    <li class="nav-item"
+                        th:each="page_num : ${#numbers.sequence(0, parts.totalPages>0?parts.totalPages-1:0)}">
+                        <a class="nav-link" th:text="${page_num}"
+                           th:href="@{/(page=${page_num},filter=${current_filter},search=${current_search})}"
+                           th:classappend="${current_page}==${page_num}?'active':''"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="modal fade" id="alert" tabindex="-1"
+             role="dialog" aria-labelledby="alertLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header alert-warning">
+                        <h5 class="modal-title" id="alertLabel">
+                            Can not search!
+                        </h5>
+                        <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
