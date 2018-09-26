@@ -138,16 +138,9 @@ public class PartController {
     }
 
     private int getComputersCount() {
-        List<Part> parts = partRepository.findAllByNeedIsTrue();
-        if (parts.isEmpty())
-            return 0;
-        int result = parts.get(0).getCount();
-        for (Part part : parts) {
-            if (part.getCount() < result)
-                result = part.getCount();
-        }
-
-        return result;
+        return partRepository.findAllByNeedIsTrue().stream()
+                .mapToInt(part -> part.getCount())
+                .min().orElse(0);
     }
 
     private boolean validatePart(Part part) {
