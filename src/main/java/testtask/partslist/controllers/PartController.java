@@ -139,7 +139,7 @@ public class PartController {
 
     private int getComputersCount() {
         return partRepository.findAllByNeedIsTrue().stream()
-                .mapToInt(part -> part.getCount())
+                .mapToInt(Part::getCount)
                 .min().orElse(0);
     }
 
