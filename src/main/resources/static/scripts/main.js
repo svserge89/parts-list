@@ -51,7 +51,7 @@ function editAction(checkName) {
         if (userInput.length == 0) {
             showAlert("Name can not be empty.");
         } else if (userInput.length > 40) {
-            showAlert("Name length > 40 characters.")
+            showAlert("Name length > 40 characters.");
         } else if (!validateString(userInput)) {
             showAlert("Name can't contain next characters: " +
                 "< > % $ & * ^ : ; ? ' \" ` \\ /.");

@@ -19,9 +19,10 @@
 <body>
     <div class="container">
         <div class="card">
+            <div class="card-header text-center"><h4>Parts list</h4></div>
             <div class="card-block">
                 <div th:if="${error}=='save_fail'"
-                     class="alert alert-danger alert-dismissible fade show"
+                     class="alert alert-danger alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Failed to save the information to the database!
@@ -32,7 +33,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='save_part_exists'"
-                     class="alert alert-danger alert-dismissible fade show"
+                     class="alert alert-danger alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Failed to save the information to the database!
@@ -45,7 +46,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='delete_fail'"
-                     class="alert alert-danger alert-dismissible fade show"
+                     class="alert alert-danger alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Failed delete information from the database!
@@ -56,7 +57,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='delete_part_not_exists'"
-                     class="alert alert-danger alert-dismissible fade show"
+                     class="alert alert-danger alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Failed delete information from the database!
@@ -69,7 +70,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='save_incorrect'"
-                     class="alert alert-danger alert-dismissible fade show"
+                     class="alert alert-danger alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Failed to save the information to the database!
@@ -82,7 +83,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='save_completed'"
-                     class="alert alert-success alert-dismissible fade show"
+                     class="alert alert-success alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         The information was successfully saved to the database.
@@ -93,7 +94,7 @@
                     </button>
                 </div>
                 <div th:if="${error}=='delete_completed'"
-                     class="alert alert-success alert-dismissible fade show"
+                     class="alert alert-success alert-dismissible fade show mb-0"
                      role="alert">
                     <strong>
                         Information was successfully deleted from the database.
@@ -103,8 +104,6 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-                <h4 class="text-center">Parts list</h4>
 
                 <form method="get" action="/" id="search_form">
                     <div class="input-group mb-3">
@@ -150,13 +149,13 @@
                         </a>
                     </div>
                 </div>
-                <table class="table table-hover" id="main-table">
+                <table class="table table-hover mb-0" id="main-table">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th class="text-right">Required</th>
-                        <th class="text-right">Count</th>
-                        <th><a class="btn btn-success float-right"
+                        <th class="col-9 align-middle">Name</th>
+                        <th class="col-1 align-middle text-right">Required</th>
+                        <th class="col-1 align-middle text-right">Count</th>
+                        <th class="col-1"><a class="btn btn-success float-right"
                                th:href="@{/add(page=${current_page},filter=${current_filter})}">
                             Add
                         </a></th>
@@ -164,31 +163,33 @@
                     </thead>
                     <tbody>
                     <tr th:each="part : ${parts.content}">
-                        <td th:text="${part.name}"></td>
-                        <td class="text-right">
+                        <td class="align-middle"
+                            th:text="${part.name}"></td>
+                        <td class="align-middle text-right">
                             <input class="checkbox" type="checkbox"
                                    th:checked="${part.need}" disabled />
                         </td>
-                        <td class="text-right" th:text="${part.count}"></td>
+                        <td class="align-middle text-right"
+                            th:text="${part.count}"></td>
                         <td><a class="btn btn-primary float-right"
                                th:href="@{/edit(id=${part.id},page=${current_page},filter=${current_filter})}">
                             Edit
                         </a></td>
                     </tr>
-                    </tbody>
-                </table>
-                <table class="table table-hover">
-                    <tbody>
                     <tr>
-                        <td>Can make</td>
-                        <td class="text-right" th:text="${computers}"></td>
-                        <td class="text-right">computers</td>
+                        <td class="align-middle">Can make</td>
+
+                        <td class="align-middle text-right"
+                            th:text="${computers}"></td>
+                        <td class="align-middle text-right"
+                            colspan="2">computers</td>
                     </tr>
                     </tbody>
                 </table>
-                <hr />
+                </div>
+            <div class="card-footer">
                 <ul th:if="${parts.totalPages>1}"
-                    class="nav nav-pills mb-3 justify-content-center">
+                    class="nav nav-pills justify-content-center">
                     <li class="nav-item"
                         th:each="page_num : ${#numbers.sequence(0, parts.totalPages>0?parts.totalPages-1:0)}">
                         <a class="nav-link" th:text="${page_num}"
